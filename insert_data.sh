@@ -14,10 +14,10 @@ cat games.csv | while IFS=',' read YEAR ROUND WINNER OPPONENT WINNER_GOALS OPPON
 do
   if [[ $YEAR != "year" ]]
   then
-    # insert both teams; duplicates are skipped thanks to UNIQUE
+  
     $PSQL "INSERT INTO teams(name) VALUES('$WINNER'),('$OPPONENT') ON CONFLICT (name) DO NOTHING"
 
-    # look up the IDs inside the insert, so no hard-coded values
+
     $PSQL "INSERT INTO games(year, round, winner_id, opponent_id, winner_goals, opponent_goals)
            VALUES($YEAR, '$ROUND',
                   (SELECT team_id FROM teams WHERE name='$WINNER'),
